@@ -119,7 +119,7 @@ stages:
   - stage: Approval
     displayName: 'Aprobar'
     dependsOn: CI
-    condition: succeeded()
+    condition: SecurityScan
     jobs:
       - job: manual_gate
         displayName: 'Esperando aprobación'
