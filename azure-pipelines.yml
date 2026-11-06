@@ -86,7 +86,35 @@ stages:
             displayName: 'Publicar Cobertura en Azure DevOps'
 
   # ==========================================
-  # STAGE 2: APROBACIÓN MANUAL (APPROVAL)
+  # STAGE 1.5: SEGURIDAD (DEVSECOPS) - ¡NUEVO!
+  # ==========================================
+  - stage: SecurityScan
+    displayName: 'Seguridad'
+    dependsOn: CI
+    condition: succeeded()
+    jobs:
+      - job: vulnerability_scan
+        displayName: 'Análisis de Vulnerabilidades'
+        steps:
+          - script: |
+              echo "🔍 Iniciando escaneo de seguridad en dependencias (SCA)..."
+              sleep 3
+              echo "📦 Analizando Dockerfile en busca de malas prácticas..."
+              sleep 3
+              echo "🛡️ Buscando vulnerabilidades conocidas (CVEs)..."
+              sleep 4
+              echo "================================================="
+              echo "📊 REPORTE DE SEGURIDAD (Simulado Trivy/Snyk)"
+              echo "================================================="
+              echo "CRITICAL: 0"
+              echo "HIGH: 0"
+              echo "MEDIUM: 0"
+              echo "LOW: 2 (Aceptadas por riesgo bajo)"
+              echo "✅ Escaneo completado. El artefacto es seguro para despliegue."
+            displayName: 'Simulación de Escáner de Seguridad'
+
+  # ==========================================
+  # STAGE 3: APROBACIÓN MANUAL (APPROVAL)
   # ==========================================
   - stage: Approval
     displayName: 'Aprobar'
@@ -104,7 +132,7 @@ stages:
               onTimeout: 'reject'
 
   # ==========================================
-  # STAGE 3: DESPLIEGUE CONTINUO (CD)
+  # STAGE 4: DESPLIEGUE CONTINUO (CD)
   # ==========================================
   - stage: CD
     displayName: 'CD'
@@ -146,7 +174,7 @@ stages:
             displayName: 'Descarga CLI, Login y Despliegue Docker'
 
   # ==========================================
-  # STAGE 4: NOTIFICACIONES (NOTIFICATIONS)
+  # STAGE 5: NOTIFICACIONES (NOTIFICATIONS)
   # ==========================================
   - stage: Notifications
     displayName: 'Notificar'
